@@ -1,0 +1,33 @@
+/* src/index.css */
+/* ———————————————————————————————————————————————————————————————— */
+/* 1) your existing Tailwind layers */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ———————————————————————————————————————————————————————————————— */
+/* 2) Override Google Places Autocomplete styles (pac-container & pac-item) */
+.pac-container {
+  /* ensure on top of everything else */
+  z-index: 1000 !important;
+  /* solid white background */
+  background-color: #fff !important;
+  /* light border for clarity */
+  border: 1px solid #ccc !important;
+}
+
+.pac-item {
+  /* black text, full opacity */
+  color: #000 !important;
+  opacity: 1 !important;
+  /* use your Poppins font if you like */
+  font-family: 'Poppins', sans-serif !important;
+  /* a little padding so it’s not cramped */
+  padding: 0.5rem !important;
+}
+
+.pac-item:hover,
+.pac-item.pac-item-selected {
+  /* subtle hover state */
+  background-color: #f0f0f0 !important;
+}
