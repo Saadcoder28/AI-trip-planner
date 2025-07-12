@@ -5,7 +5,7 @@ import { onAuthStateChanged }     from "firebase/auth";
 import { LoadScript }             from "@react-google-maps/api";
 import Header                     from "./components/Header";
 import Hero                       from "./components/Hero";
-import TripForm                   from "./components/TripForm";  // note the exact casing
+import TripForm                   from "./components/Tripform";  // note the exact casing
 import Trips                      from "./pages/Trips";
 import ViewTrip                   from "./pages/ViewTrip";
 import { auth }                   from "./firebase";
