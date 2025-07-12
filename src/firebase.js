@@ -1,24 +1,20 @@
+// src/firebase.js
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore, setDoc, doc } from "firebase/firestore"; // ✅ Combined import
+import { getAuth, onAuthStateChanged as firebaseOnAuthStateChanged } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBjpvM0ZY5f3U39Hhc4oeKMX31ywLFkYnY",
-  authDomain: "ai-trip-planner-c7244.firebaseapp.com",
-  projectId: "ai-trip-planner-c7244",
-  storageBucket: "ai-trip-planner-c7244.appspot.com", // ✅ fix extension
-  messagingSenderId: "808581986899",
-  appId: "1:808581986899:web:726a006fce70f9bf4ce4a6"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 const app = initializeApp(firebaseConfig);
+
 export const auth = getAuth(app);
 export const db = getFirestore(app);
-
-// ✅ Test Firestore write AFTER db is initialized
-setDoc(doc(db, "test", "testDoc"), { hello: "world" })
-  .then(() => console.log("✅ Write succeeded"))
-  .catch((err) => console.error("❌ Write failed:", err));
-
-
-  export { onAuthStateChanged } from "firebase/auth";
+// re-export the auth state listener under the same name you used elsewhere
+export const onAuthStateChanged = firebaseOnAuthStateChanged;
