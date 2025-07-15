@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+// src/components/TripForm.jsx
+import { useState, useEffect }          from "react";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
-import { db } from "../firebase";
+import { useNavigate }                  from "react-router-dom";
+import { db }                           from "../firebase";
+import LocationSearch                  from "./LocationSearch";
+import usePlacePhotos                  from "../hooks/usePlacePhotos";
 
-import LocationSearch from "./LocationSearch";
-import usePlacePhotos from "../hooks/usePlacePhotos";
-
-export default function TripForm({ user }) {
+export default function TripForm({ user, onSubmit }) {
   const [destination, setDestination] = useState(null);
   const [itinerary,   setItinerary]   = useState("");
   const [loading,     setLoading]     = useState(false);
@@ -14,30 +14,24 @@ export default function TripForm({ user }) {
   const [saved,       setSaved]       = useState(false);
   const navigate = useNavigate();
 
-  // pull photos (if any) via your custom hook
+  // fetch photos via your hook
   const { photoUrls = [] } = usePlacePhotos(destination?.place_id);
   const [imgMain,   setImgMain]   = useState("");
   const [imgTravel, setImgTravel] = useState("");
 
   useEffect(() => {
     if (!destination) return;
-    const name   = destination.formatted_address || destination.name;
-    const stamp  = Date.now();
-
+    const name  = destination.formatted_address || destination.name;
+    const stamp = Date.now();
     if (photoUrls.length) {
       setImgMain(photoUrls[0]);
       setImgTravel(photoUrls[1] || photoUrls[0]);
     } else {
-      setImgMain(
-        `https://source.unsplash.com/600x400/?${encodeURIComponent(name)}&t=${stamp}`
-      );
-      setImgTravel(
-        `https://source.unsplash.com/600x400/?${encodeURIComponent(name + " travel")}&t=${stamp}`
-      );
+      setImgMain(`https://source.unsplash.com/600x400/?${encodeURIComponent(name)}&t=${stamp}`);
+      setImgTravel(`https://source.unsplash.com/600x400/?${encodeURIComponent(name + " travel")}&t=${stamp}`);
     }
   }, [destination, photoUrls]);
 
-  // **Fetch**-based call to Gemini
   const GEMINI_KEY = import.meta.env.VITE_GEMINI_API_KEY;
   const fetchItinerary = async (place) => {
     const res = await fetch(
@@ -47,9 +41,7 @@ export default function TripForm({ user }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           contents: [{
-            parts: [{
-              text: `Create a detailed 3-day itinerary for ${place}. Include attractions, food and local tips.`
-            }]
+            parts: [{ text: `Create a detailed 3-day itinerary for ${place}. Include attractions, food and local tips.` }]
           }]
         })
       }
@@ -65,10 +57,10 @@ export default function TripForm({ user }) {
     setLoading(true);
     setError("");
     try {
-      const text = await fetchItinerary(
-        destination.formatted_address || destination.name
-      );
+      const text = await fetchItinerary(destination.formatted_address || destination.name);
       setItinerary(text);
+      // **notify the parent** if it cares
+      onSubmit?.(destination);
     } catch (err) {
       console.error(err);
       setError(err.message);
@@ -105,7 +97,7 @@ export default function TripForm({ user }) {
         <button
           type="submit"
           disabled={loading || !destination}
-          className={`w-full py-3 rounded-full font-semibold transition 
+          className={`w-full py-3 rounded-full font-semibold transition
             ${loading || !destination
               ? "bg-gray-600 text-gray-400 cursor-not-allowed"
               : "bg-red-600 text-white hover:bg-red-700"}`}
@@ -113,8 +105,7 @@ export default function TripForm({ user }) {
           {loading ? "Generating…" : "Get trip ideas"}
         </button>
       </form>
-      {error && <p className="mt-4 text-red-400">{error}</p>}
-
+      {error   && <p className="mt-4 text-red-400">{error}</p>}
       {itinerary && (
         <div className="mt-6 space-y-4">
           <div className="text-lg text-white whitespace-pre-wrap">{itinerary}</div>
