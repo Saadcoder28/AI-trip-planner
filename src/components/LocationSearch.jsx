@@ -1,10 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-/**
- * Google-Places-aware location input.
- * Falls back to a curated list of popular destinations when the Places
- * library is unavailable (e.g. API quota exceeded or offline).
- */
+
 export default function LocationSearch({ onSelect }) {
   const [query, setQuery]               = useState("");
   const [suggestions, setSuggestions]   = useState([]);

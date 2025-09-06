@@ -6,7 +6,7 @@ export default function Hero() {
         AI Trip Planner
       </h1>
       <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-        Your personal travel curator — instant, personalized 3-day guides for 1,000+ destinations.
+        Your personal travel curator — instant, personalized guides for 1,000+ destinations.
       </p>
     </section>
   );
