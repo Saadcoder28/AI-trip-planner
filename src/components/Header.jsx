@@ -1,26 +1,59 @@
-import { Link } from "react-router-dom";
-import Auth from "./Auth";
+// src/components/Header.jsx
+import { Link, useLocation } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase";
 
 export default function Header({ user, setUser }) {
+  const location = useLocation();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
   return (
     <header className="w-full bg-gray-900 text-white py-4">
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
-        {/* left: “My Trips” */}
-        {user ? (
-          <Link to="/trips" className="text-gray-300 hover:text-white">
-            My Trips
+      <div className="max-w-7xl mx-auto flex justify-between items-center px-8">
+        {/* Left - My Trips (moved further left) */}
+        <div className="flex-1">
+          {user && (
+            <Link 
+              to="/trips" 
+              className={`text-lg font-medium transition ${
+                location.pathname === "/trips" ? "text-red-500" : "hover:text-red-400"
+              }`}
+            >
+              My Trips
+            </Link>
+          )}
+        </div>
+
+        {/* Center - Home */}
+        <div className="flex-1 text-center">
+          <Link 
+            to="/" 
+            className={`text-lg font-medium transition ${
+              location.pathname === "/" ? "text-red-500" : "hover:text-red-400"
+            }`}
+          >
+            Home
           </Link>
-        ) : (
-          <div className="w-20" /> /* spacer */
-        )}
+        </div>
 
-        {/* centre: “Home” */}
-        <Link to="/" className="text-lg font-bold">
-          Home
-        </Link>
-
-        {/* right: login/logout */}
-        <Auth user={user} setUser={setUser} />
+        {/* Right - Logout (moved further right) */}
+        <div className="flex-1 text-right">
+          {user && (
+            <button
+              onClick={handleLogout}
+              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition"
+            >
+              Logout
+            </button>
+          )}
+        </div>
       </div>
     </header>
   );

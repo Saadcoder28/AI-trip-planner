@@ -1,9 +1,8 @@
 // src/firebase.js
-import { initializeApp } from "firebase/app"
-import { getAuth } from "firebase/auth"
-import { getFirestore } from "firebase/firestore"
+import { initializeApp } from "firebase/app";
+import { getAuth, setPersistence, browserLocalPersistence } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
-// pull everything from your .env.local
 const firebaseConfig = {
   apiKey:               import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain:           import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -11,8 +10,19 @@ const firebaseConfig = {
   storageBucket:        import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
   messagingSenderId:    import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
   appId:                import.meta.env.VITE_FIREBASE_APP_ID,
-}
+};
 
-const app = initializeApp(firebaseConfig)
-export const auth = getAuth(app)
-export const db   = getFirestore(app)
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+
+// Set auth persistence and log the result
+setPersistence(auth, browserLocalPersistence)
+  .then(() => {
+    console.log("✅ Firebase auth persistence enabled");
+  })
+  .catch((error) => {
+    console.error("❌ Firebase auth persistence failed:", error);
+  });
+
+export default app;

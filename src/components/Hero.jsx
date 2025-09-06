@@ -1,12 +1,11 @@
-import React from "react";
-
+// src/components/Hero.jsx
 export default function Hero() {
   return (
-    <section className="pt-24 pb-12 text-center">
-      <h1 className="text-5xl font-extrabold text-red-600">
+    <section className="pt-28 pb-16 text-center">
+      <h1 className="text-6xl font-bold text-red-500 mb-8">
         AI Trip Planner
       </h1>
-      <p className="mt-6 text-lg text-gray-300 max-w-2xl mx-auto">
+      <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
         Your personal travel curator — instant, personalized 3-day guides for 1,000+ destinations.
       </p>
     </section>
