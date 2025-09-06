@@ -136,7 +136,7 @@ Use simple day-by-day structure with line breaks only.`
           className={`w-full py-3 rounded-full font-semibold transition
             ${loading || !destination
               ? "bg-gray-600 text-gray-400 cursor-not-allowed"
-              : "bg-red-600 text-white hover:bg-red-700"}`}
+              : "bg-gray-900 text-white hover:bg-gray-800"}`}
         >
           {loading ? "Generating…" : "Get trip ideas"}
         </button>
