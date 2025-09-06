@@ -1,8 +1,8 @@
 # ✈️ AI Trip Planner
 
-**Live Demo:** [https://ai-trip-planner-six-rust.vercel.app](https://ai-trip-planner-six-rust.vercel.app)
+**Live Demo:** https://ai-trip-planner-six-rust.vercel.app
 
-AI Trip Planner is your personal travel curator. It generates instant, personalized 3-day travel itineraries for over 1000+ destinations using Google Places and Gemini AI. Save your favorite trips securely with Firebase.
+AI Trip Planner is your personal travel curator. It generates instant, personalized 3-day travel itineraries for 1000+ destinations using Google Places and Gemini AI. Save your favorite trips securely with Firebase.
 
 ---
 
@@ -14,7 +14,7 @@ AI Trip Planner is your personal travel curator. It generates instant, personali
 - 🔐 User authentication with Firebase Auth  
 - ☁️ Cloud storage for trips using Firestore  
 - 🎨 Responsive UI built with Tailwind CSS  
-- ✅ Deployed on Vercel
+- ✅ Deployed on Vercel  
 
 ---
 
@@ -24,7 +24,7 @@ AI Trip Planner is your personal travel curator. It generates instant, personali
 - **Styling:** Tailwind CSS  
 - **Backend:** Firebase Auth & Firestore  
 - **APIs:** Google Places API, Google Maps Photos API, Gemini API  
-- **Hosting:** Vercel
+- **Hosting:** Vercel  
 
 ---
 
@@ -35,17 +35,19 @@ AI Trip Planner is your personal travel curator. It generates instant, personali
 ```bash
 git clone https://github.com/Saadcoder28/AI-trip-planner.git
 cd AI-trip-planner
-2. Install dependencies
-bash
-Copy
-Edit
-npm install
-3. Set up environment variables
-Create a .env.local file in the root directory and add the following:
+```
 
-env
-Copy
-Edit
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Add environment variables
+
+Create a `.env.local` file in the root directory:
+
+```env
 VITE_FIREBASE_API_KEY=your_firebase_api_key
 VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
 VITE_FIREBASE_PROJECT_ID=your_project_id
@@ -54,51 +56,60 @@ VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
 VITE_FIREBASE_APP_ID=your_app_id
 VITE_GEMINI_API_KEY=your_gemini_api_key
 VITE_MAPS_API_KEY=your_google_maps_api_key
-⚠️ Keep this file private and do not commit it.
+```
 
-4. Run the development server
-bash
-Copy
-Edit
+⚠️ **Important:** Do NOT commit this file to GitHub. It’s ignored by `.gitignore`.
+
+### 4. Run the development server
+
+```bash
 npm run dev
-Visit: http://localhost:5173
+```
 
-📤 Deployment (Vercel)
-This app is deployed using Vercel.
+Then open: `http://localhost:5173`
 
-To manually deploy:
+---
 
-bash
-Copy
-Edit
+## 📤 Deployment (Vercel)
+
+This app is automatically deployed using Vercel.
+
+To deploy manually:
+
+```bash
 vercel --prod
-Or push to GitHub and Vercel auto-deploys the main branch.
+```
 
-🔒 Security
-API keys are stored in .env.local
+Or push to GitHub and Vercel will auto-deploy from the `main` branch.
 
-Firebase rules restrict trip data per authenticated user
+---
 
-Google Maps key is domain-restricted
+## 🔒 Security
 
-🙌 Acknowledgements
-Firebase
+- All API keys are stored in `.env.local`  
+- Firebase Firestore rules restrict trip data to authenticated users  
+- Google Maps API key is domain-restricted for protection  
 
-Gemini AI
+---
 
-Google Maps API
+## 🙌 Acknowledgements
 
-Tailwind CSS
+- Firebase  
+- Gemini AI  
+- Google Maps Platform  
+- Tailwind CSS  
+- Vercel  
 
-Vercel
+---
 
-👨‍💻 Author
-Saad Amin
-GitHub – @Saadcoder28
+## 👨‍💻 Author
 
-⭐️ Show your support
-If you like this project, give it a ⭐ on GitHub!
+**Saad Amin**  
+GitHub: [@Saadcoder28](https://github.com/Saadcoder28)
 
-python
-Copy
-Edit
+---
+
+## ⭐️ Support
+
+If you like this project, give it a ⭐️ on GitHub!
+
