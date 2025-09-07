@@ -1,4 +1,4 @@
-// src/App.jsx
+// src/App.jsx - Add better mobile handling
 import React, { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
@@ -14,14 +14,39 @@ export default function App() {
   const [user, setUser] = useState(undefined);
   const [mapsLoaded, setMapsLoaded] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
+  const [authTimeout, setAuthTimeout] = useState(false);
 
   useEffect(() => {
+    let mounted = true;
+    let timeoutId;
+
+    // Immediate check for existing user
+    if (auth.currentUser && mounted) {
+      setUser(auth.currentUser);
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+      if (mounted) {
+        setUser(currentUser);
+        setAuthTimeout(false);
+      }
     });
 
-    return unsubscribe;
-  }, []);
+    // Fallback timeout for mobile/slow connections - 3 seconds
+    timeoutId = setTimeout(() => {
+      if (mounted && user === undefined) {
+        console.log("Auth timeout reached, continuing without auth");
+        setAuthTimeout(true);
+        setUser(null); // Set to null instead of undefined to stop loading
+      }
+    }, 3000);
+
+    return () => {
+      mounted = false;
+      clearTimeout(timeoutId);
+      unsubscribe();
+    };
+  }, [user]);
 
   useEffect(() => {
     if (window.google?.maps?.places) {
@@ -41,14 +66,22 @@ export default function App() {
     }
   };
 
-  if (user === undefined) {
-    return <div className="min-h-screen bg-gray-900"></div>;
+  // Show loading only if user is undefined AND timeout hasn't been reached
+  if (user === undefined && !authTimeout) {
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <div className="text-center text-white">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
+          <div className="text-lg">Loading...</div>
+        </div>
+      </div>
+    );
   }
 
   const renderHomePage = () => (
     <>
       <Hero />
-      <div className="w-full max-w-3xl mx-auto -mt-4 px-4"> {/* Changed from mt-2 to -mt-4 */}
+      <div className="w-full max-w-3xl mx-auto -mt-4 px-4">
         {user ? (
           <TripForm
             user={user}
