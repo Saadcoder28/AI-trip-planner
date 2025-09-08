@@ -1,7 +1,7 @@
-// src/App.jsx - Add better mobile handling
+// src/App.jsx
 import React, { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
-import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import { LoadScript } from "@react-google-maps/api";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
@@ -20,26 +20,43 @@ export default function App() {
     let mounted = true;
     let timeoutId;
 
-    // Immediate check for existing user
-    if (auth.currentUser && mounted) {
-      setUser(auth.currentUser);
-    }
+    // Only validate tokens on initial app load to detect stale sessions
+    const checkStaleSession = async () => {
+      if (auth.currentUser) {
+        try {
+          // Try to refresh the token to validate session
+          await auth.currentUser.getIdToken(true);
+          console.log("Auth session is valid");
+          if (mounted) setUser(auth.currentUser);
+        } catch (error) {
+          console.log("Stale session detected, signing out");
+          // Session is stale/expired, sign out the user
+          await signOut(auth);
+          if (mounted) setUser(null);
+        }
+      }
+    };
+
+    // Check for stale session ONLY on initial load
+    checkStaleSession();
 
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (mounted) {
+        // Don't validate here - just trust the auth state change
+        // This prevents logging out active users
         setUser(currentUser);
         setAuthTimeout(false);
       }
     });
 
-    // Fallback timeout for mobile/slow connections - 3 seconds
+    // Fallback timeout for slow connections
     timeoutId = setTimeout(() => {
       if (mounted && user === undefined) {
         console.log("Auth timeout reached, continuing without auth");
         setAuthTimeout(true);
-        setUser(null); // Set to null instead of undefined to stop loading
+        setUser(null);
       }
-    }, 3000);
+    }, 4000);
 
     return () => {
       mounted = false;
